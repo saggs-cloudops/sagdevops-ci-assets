@@ -9,15 +9,42 @@
  -->
 
 <project name="Build and Deploy Solution" default="buildDeployTest" basedir="." >
+
+	<!-- first: load properties from the properties files (first project, then system) -->
 	<property file="${project.properties}"/>
 	<property file="System.properties"/>
-        
+
+	<!-- second: load env variables into properties -->
+	<property environment="env"/>
+	    
+	<!-- set SAGHome from env properties -->
+	<property name="SAGHome" value="${env.SAG_HOME}" />
+	<property name="SAGHome" value="${env.SAGHome}" />
+
+	<!-- General values -->
+	<property name="buildOutputDir" value="${workspace.dir}/target/${projectName}/build"/>
+	<property name="repositoryName" value="${projectName}Repo"/>
+	<property name="testPackageNamePattern" value="*_Test"/>
+	<property name="jenkinsReportDir" value="${workspace.dir}/report"/>
+
+	<!-- deployer host-->
+	<property name="deployerInstallationPath" value="${env.deployerInstallationPath}" />
+	<property name="deployerHost" value="${env.deployerHost}" />
+	<property name="deployerPort" value="${env.deployerPort}" />
+	<property name="deployerUsername" value="${env.deployerUsername}" />
+	<property name="deployerPassword" value="${env.deployerPassword}" />
+
+	<!-- test target host-->
+	<property name="testISHost" value="${env.testISHost}" />
+	<property name="testISPort" value="${env.testISPort}" />
+	<property name="testISUsername" value="${env.testISUsername}" />
+	<property name="testISPassword" value="${env.testISPassword}" />
+
 	<import file="buildInitProject.xml"/>
 	<import file="buildCallABE.xml"/>
 	<import file="buildDeployer.xml"/>
 	<import file="buildTest.xml"/>
 	
-
 	<taskdef classpath="lib/ant-contrib.jar" resource="net/sf/antcontrib/antlib.xml"/>
 				
 	<target name="build" depends="initProject,buildWM">		
@@ -28,7 +55,7 @@
 		<description>Deploy project.</description>
 	</target>
 
-        <target name="test" depends="initProject,startTest">
+    <target name="test" depends="initProject,startTest">
 		<description>Run tests.</description>
 	</target>	
 	
