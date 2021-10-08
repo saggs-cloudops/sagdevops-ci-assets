@@ -9,34 +9,34 @@
  -->
 
 <project name="Build" default="buildWM" basedir=".">
-        
-        <property name="abeHome" value="${SAGHome}/common/AssetBuildEnvironment"/>
-        
-        <property name="abeBuildfileDir" value="master_build"/>
 
-        <property name="abeBuildfileFile" value="build.xml"/>
+	<property name="abeHome" value="${SAGHome}/common/AssetBuildEnvironment"/>
+
+	<property name="abeBuildfileDir" value="master_build"/>
+
+	<property name="abeBuildfileFile" value="build.xml"/>
 
 	<property name="abeBuildPropertiesReference" value="master_build_Reference/build.properties"/>
 
 
 
-	<target name="buildWM" description="build project" depends="cleanupBuild, prepareABEproperties">				
-		<echo>invoke ABE Build</echo>					
+	<target name="buildWM" description="build project" depends="cleanupBuild, prepareABEproperties">
+		<echo>invoke ABE Build</echo>
 		<ant antfile="${abeBuildfileFile}" dir="${abeHome}/${abeBuildfileDir}" target="build"/>
 	</target>
-	
-	<target name="cleanupBuild">			
+
+	<target name="cleanupBuild">
 		<if>
 			<available file="${buildOutputDir}" type="dir"/>
 			<then>
 				<delete includeemptydirs="true">
 					<fileset dir="${buildOutputDir}" includes="**/*"/>
-				</delete>	
+				</delete>
 			</then>
 		</if>
 	</target>
-	
-	<target name="prepareABEproperties">			
+
+	<target name="prepareABEproperties">
 		<if>
 			<not>
 				<available file="${abeHome}/${abeBuildfileDir}/build.properties.original" type="file"/>
@@ -46,10 +46,10 @@
 				<move file="${abeHome}/${abeBuildfileDir}/build.properties" tofile="${abeHome}/${abeBuildfileDir}/build.properties.original"/>
 			</then>
 		</if>
-				
+
 		<!-- move build.properties from SVN to the target ABE folder -->
-		<copy file="${abeBuildPropertiesReference}" tofile="${abeHome}/${abeBuildfileDir}/build.properties" overwrite="true"/>		
+		<copy file="${abeBuildPropertiesReference}" tofile="${abeHome}/${abeBuildfileDir}/build.properties" overwrite="true"/>
 	</target>
-	
-	
+
+
 </project>

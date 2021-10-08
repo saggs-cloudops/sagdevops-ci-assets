@@ -8,7 +8,7 @@
     Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.                                                            
  -->
 
-<project name="Build and Deploy Solution" default="buildDeployTest" basedir="." >
+<project name="Build and Deploy Solution" default="buildDeployTest" basedir=".">
 
 	<!-- first: load properties from the properties files (first project, then system) -->
 	<property file="${project.properties}"/>
@@ -16,7 +16,7 @@
 
 	<!-- second: load env variables into properties -->
 	<property environment="env"/>
-	    
+
 	<!-- set SAGHome from env properties -->
 	<property name="SAGHome" value="${env.SAG_HOME}" />
 	<property name="SAGHome" value="${env.SAGHome}" />
@@ -44,21 +44,21 @@
 	<import file="buildCallABE.xml"/>
 	<import file="buildDeployer.xml"/>
 	<import file="buildTest.xml"/>
-	
+
 	<taskdef classpath="lib/ant-contrib.jar" resource="net/sf/antcontrib/antlib.xml"/>
-				
-	<target name="build" depends="initProject,buildWM">		
+
+	<target name="build" depends="initProject,buildWM">
 		<description>Build project.</description>
 	</target>
-		
+
 	<target name="deploy" depends="initProject,deployWM">
 		<description>Deploy project.</description>
 	</target>
 
-    <target name="test" depends="initProject,startTest">
+	<target name="test" depends="initProject,startTest">
 		<description>Run tests.</description>
-	</target>	
-	
+	</target>
+
 	<target name="buildDeployTest" depends="build, deploy, test">
 		<description>Build and deploy the project.</description>
 	</target>
