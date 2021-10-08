@@ -15,6 +15,7 @@
 	<path id="junitClasspath">
 		<fileset dir="${SAGHome}/common/lib/ext" includes="enttoolkit.jar" />
 		<fileset dir="${SAGHome}/common/lib" includes="**/gf.javax.mail.jar" />
+		<fileset dir="${SAGHome}/common/lib" includes="**/gf.jakarta.mail.jar" />
 		<fileset dir="${SAGHome}/common/lib" includes="wm-isclient.jar" />
 		<fileset dir="${SAGHome}/IntegrationServer/lib" includes="wm-isserver.jar" />
 		<fileset dir="./lib" includes="httpunit.jar" />
@@ -23,19 +24,19 @@
 		<fileset dir="./lib" includes="serviceInterceptor.jar" />
 		<fileset dir="./lib" includes="serviceMockClient.jar" />
 	</path>
-	
-	<target name="startTest" depends="jenkinsCheck">		
+
+	<target name="startTest" depends="jenkinsCheck">
 		<var name="failedTestList" value=""/>
-		
-                <!-- interate over the test project and triiger all xml tests in the setup folder -->
-                <for param="testProject" keepgoing="true" trim="true">
+
+		<!-- interate over the test project and triiger all xml tests in the setup folder -->
+		<for param="testProject" keepgoing="true" trim="true">
 			<path>
 				<dirset dir="${testSuitePackagesPath}" includes="*" excludes=".*,replicate" />
 			</path>
 			<sequential>
 				<trycatch reference="exception_ref">
 					<try>
-                        <echo message="@{testProject}"/>
+						<echo message="@{testProject}"/>
 						<antcall target="junitTestAndReportXML">
 							<param name="testPackageName" value="@{testProject}" />
 						</antcall>
@@ -52,9 +53,6 @@
 			</sequential>
 		</for>
 
-
-
-		
 		<if>
 			<not>
 				<equals arg1="${failedTestList}" arg2="" trim="true" />
@@ -70,27 +68,31 @@
 
 	<target name="junitInitTest">
 		<echo message="Init JUnit tests for package ${testPackageName}" />
-		
+
 		<property name="testPackageReportsDir" value="${testPackageName}/resources/reports" />
 	</target>
-	
+
 	<target name="junitCleanUp">
-		<delete dir="${testPackageReportsDir}" />								
+		<delete dir="${testPackageReportsDir}" />
 	</target>
-	
+
 
 	<!--execute only if the XML Test directory exists in the test package -->
 	<target name="junitTestAndReportXML" depends="junitInitTest,junitCleanUp">
 		<echo message="Starting JUnit tests for package '${testPackageName}'"/>
-		
+
 		<mkdir dir="${testPackageReportsDir}" />
 
 		<property name="resourcesFolder" value="${testPackageName}/resources" />
-		
+
 		<for param="testSetupFile" keepgoing="true">
 			<path>
-				<!--fileset dir="${testPackageXmlDir}" includes="*.xml" /-->
-				<fileset dir="${testPackageName}" includes="**/setup/*.xml" />
+				<fileset dir="${resourcesFolder}" casesensitive="yes">
+					<include name="**/*.xml"/>
+					<exclude name="**/data/*"/>
+					<exclude name="**/*_input.xml"/>
+					<exclude name="**/*_output.xml"/>
+				</fileset>
 			</path>
 			<sequential>
 				<basename property="fileBasename" file="@{testSetupFile}" suffix=".xml" />
@@ -108,18 +110,18 @@
 					<formatter type="xml" />
 					<test name="com.wm.ps.test.WmTestSuite" outfile="TEST-${fileBasename}" haltonerror="false" haltonfailure="false" todir="${testPackageReportsDir}" />
 				</junit>
-				<replaceregexp file="${testPackageReportsDir}/TEST-${fileBasename}.xml" match=" name=&quot;com.wm.ps.test.WmTestSuite&quot; " replace=" name=&quot;com.wm.ps.test.WmTestSuite [${fileBasename}]&quot; " />												
+				<replaceregexp file="${testPackageReportsDir}/TEST-${fileBasename}.xml" match=" name=&quot;com.wm.ps.test.WmTestSuite&quot; " replace=" name=&quot;com.wm.ps.test.WmTestSuite [${fileBasename}]&quot; " />
 				<var name="fileBasename" unset="true" />
 			</sequential>
 		</for>
 
-		
+
 		<!-- if jenkins report dir is set publicate results there-->
 		<antcall target="junitCopyResultsToReportsDir">
 			<param name="current.report.dir" value="${testPackageReportsDir}" />
 		</antcall>
-		
-		
+
+
 		<!-- create HTML report of the test results -->
 		<junitreport todir="${testPackageReportsDir}">
 			<fileset dir="${testPackageReportsDir}">
@@ -146,14 +148,14 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<!-- will jenkins evaluate the test results -->
-	<target name="jenkinsCheck" >
-		 <condition property="isReportingToJenkins">
-		 	<not>
-            	<equals arg1="${jenkinsReportDir}" arg2="" trim="true"/>
-	 		</not>	
-	     </condition>
+	<target name="jenkinsCheck">
+		<condition property="isReportingToJenkins">
+			<not>
+				<equals arg1="${jenkinsReportDir}" arg2="" trim="true"/>
+			</not>
+		</condition>
 	</target>
-	
+
 </project>
