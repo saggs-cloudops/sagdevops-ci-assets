@@ -20,6 +20,9 @@
 	<!-- set SAGHome from env properties -->
 	<property name="SAGHome" value="${env.SAG_HOME}" />
 	<property name="SAGHome" value="${env.SAGHome}" />
+	
+	<!-- Project properties -->
+	<property name="projectName" value="${env.projectName}" />
 
 	<!-- General values -->
 	<property name="buildOutputDir" value="${workspace.dir}/target/${projectName}/build"/>
@@ -45,7 +48,9 @@
 	<import file="buildDeployer.xml"/>
 	<import file="buildTest.xml"/>
 
-	<taskdef classpath="lib/ant-contrib.jar" resource="net/sf/antcontrib/antlib.xml"/>
+	<!-- Load libs from sag.ci.home -->
+    <property name="sag.ci.home" value="${basedir}" />
+	<taskdef classpath="${sag.ci.home}/lib/ant-contrib.jar" resource="net/sf/antcontrib/antlib.xml"/>
 
 	<target name="build" depends="initProject,buildWM">
 		<description>Build project.</description>
