@@ -16,7 +16,8 @@
 
 	<property name="abeBuildfileFile" value="build.xml"/>
 
-	<property name="abeBuildPropertiesReference" value="master_build_Reference/build.properties"/>
+    <property name="sag.ci.home" value="${basedir}" />
+	<property name="abeBuildPropertiesReference" value="${sag.ci.home}/master_build_Reference/build.properties"/>
 
 
 
