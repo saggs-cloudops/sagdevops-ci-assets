@@ -24,7 +24,8 @@
 	<property name="SAGHome" value="${env.SAGHome}" />
 	
 	<!-- Project properties -->
-	<property name="projectName" value="${env.projectName}" />
+	<property name="projectName" value="${env.projectName}" if:set="env.projectName" />
+	<property name="projectName" value="wmproject" />
 
 	<!-- General values -->
 	<property name="buildOutputDir" value="${workspace.dir}/target/${projectName}/build"/>
