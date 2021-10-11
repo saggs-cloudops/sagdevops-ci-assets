@@ -27,6 +27,15 @@
 	<property name="projectName" value="${env.projectName}" if:set="env.projectName" />
 	<property name="projectName" value="wmproject" />
 
+    <!-- remap the paths defined in project.properties to have absolute paths -->
+    <property name="isProjectsDir" location="${isPackages}"/>
+    <property name="isTestDir" location="${isTests}"/>
+    <property name="isConfigDir" location="${isConfigDir}"/>
+    <property name="bpmProjectsDir" location="${bpmProjects}"/>
+    <property name="mwsProjectsDir" location="${mwsProjects}"/>
+    <property name="rulesProjectsDir" location="${rulesProjects}"/>
+    <property name="umProjectsDir" location="${umExport}"/>
+
 	<!-- General values -->
 	<property name="buildOutputDir" value="${workspace.dir}/target/${projectName}/build"/>
 	<property name="repositoryName" value="${projectName}Repo"/>
